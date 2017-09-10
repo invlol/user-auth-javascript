@@ -29,7 +29,7 @@ class Login {
   logout(user) {
     let index = this.users.indexOf(user);
     if(index !== -1) {
-      // filter affect immutable data and could be slower than splice, test needed
+      // filter affect immutable and could be slower than splice, test needed
       // keep filter for now
       this.sessions = this.sessions.filter(session => session !== user);
     }
@@ -52,17 +52,22 @@ class Login {
   }
   
   removeUser(user) {
-    let index = this.idx(user, this.users);
-    this.users[index] = null;
-    this.passwords[index] = null;
-    this.users = this.users.filter(user => user !== null);
-    this.passwords = this.passwords.filter(password => password !== null);
+    let index = this.users.indexOf(user);
+    if(index !== -1) {
+      this.users[index] = null;
+      this.passwords[index] = null;
+      this.users = this.users.filter(user => user !== null);
+      this.passwords = this.passwords.filter(password => password !== null);
+    }
   }
   
   checkPassword(user, password) {
-    let index = this.idx(user, this.users);
-    let passwordCorrect = this.passwords[index] === password;
-    return passwordCorrect;
+    let index = this.users.indexOf(user);
+    if(index === -1) {
+      return false;
+    }
+    
+    return this.passwords[index] === password;
   }
   
   updatePassword(user, oldPassword, newPassword) {
@@ -76,7 +81,7 @@ class Login {
       return false;
     }
     
-    if (this.passwords[index] === oldPassword) {
+    if (this.checkPassword(user, oldPassword)) {
       this.passwords[index] = newPassword;
       return true;
     }
