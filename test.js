@@ -6,9 +6,9 @@ class Login {
     this.sessions = [];
     this.users = [];
     this.passwords = [];
-    Object.keys(hash).map(k => ({k, v: hash[k]})).map(e => {
-      this.users = this.users.concat([e.k]);
-      this.passwords = this.passwords.concat([e.v]);
+    Object.keys(hash).map(k => {
+      this.users.push(k);
+      this.passwords.push(hash[k])
     });
   }
   
@@ -36,9 +36,12 @@ class Login {
   
   // Register user
   registerUser(user, password) {
-    let lastIndex = this.users.length;
-    this.users[lastIndex] = user;
-    this.passwords[lastIndex] = password;
+    // register user only if username does not exist
+    if (this.users.indexOf(user) === -1) {
+      let lastIndex = this.users.length;
+      this.users[lastIndex] = user;
+      this.passwords[lastIndex] = password;
+    }
   }
   
   removeUser(user) {
