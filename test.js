@@ -27,25 +27,18 @@ class Login {
   }
   
   logout(user) {
-    this.sessions.forEach((session, i) => {
-      if (session === user) {
-        this.sessions[i] = null;
-      }
-    });
-    this.sessions = this.sessions.filter(session => session !== null);
+    let index = this.users.indexOf(user);
+    if(index !== -1) {
+      // filter affect immutable data and could be slower than splice, test needed
+      // keep filter for now
+      this.sessions = this.sessions.filter(session => session !== user);
+    }
   }
   
   // Checks if user exists
   userExists(user) {
-    // Temp variable for storing the user if found
-    let temp = '';
-    for (let i of this.users) {
-      if (i === user) {
-        temp = user;
-      }
-    }
-    let exists = (temp !== '' && temp === user);
-    return exists;
+    let index = this.users.indexOf(user);
+    return index !== -1;
   }
   
   // Register user
