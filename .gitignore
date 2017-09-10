@@ -1,0 +1,9 @@
+# Mac OSX ignored files
+*.DS_Store
+
+#IDE
+**/.idea
+
+#OS
+.DS_Store
+.tmp
