@@ -97,18 +97,6 @@ class Login {
       }
     }
   }
-  
-  // Gets index of an element in an array
-  idx(element, array) {
-    let cont=0;
-    for (let i of array) {
-      if (i === element) {
-        return cont;
-      }
-      cont += 1;
-    }
-    return cont;
-  }
 }
 
 let registeredUsers = {
