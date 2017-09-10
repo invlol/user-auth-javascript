@@ -1,5 +1,19 @@
 'use strict';
 
+// Add ECMA262-5 Array methods if not supported natively
+//
+if (!('indexOf' in Array.prototype)) {
+  Array.prototype.indexOf= function(find, i /*opt*/) {
+    if (i===undefined) i= 0;
+    if (i<0) i+= this.length;
+    if (i<0) i= 0;
+    for (let n= this.length; i<n; i++)
+      if (i in this && this[i]===find)
+        return i;
+    return -1;
+  };
+}
+
 // This class is used for logins
 class Login {
   constructor(hash) {
@@ -59,27 +73,30 @@ class Login {
   }
   
   updatePassword(user, oldPassword, newPassword) {
-    // First we check if the user exists
-    let user1 = '';
-    for (let i of this.users) {
-      if (i === user) {
-        user1 = user;
-      }
+    // if password are the same don't do anything
+    if(oldPassword === newPassword) {
+      return false;
     }
-    if (user1 === user) {
-      let index = this.idx(user, this.users);
-      if (this.passwords[index] === oldPassword) {
-        this.passwords[index] = newPassword;
-        return true;
-      }
+    // check if the user exists
+    let index = this.users.indexOf(user);
+    if(index === -1) {
+      return false;
     }
+    
+    if (this.passwords[index] === oldPassword) {
+      this.passwords[index] = newPassword;
+      return true;
+    }
+    
     return false;
   }
   
   login(user, password) {
-    let index = this.idx(user, this.users);
-    if (this.passwords[index] === password) {
-      this.sessions.push(user);
+    let index = this.users.indexOf(user);
+    if(index !== -1) {
+      if (this.passwords[index] === password) {
+        this.sessions.push(user);
+      }
     }
   }
   
@@ -107,6 +124,6 @@ let login = new Login(registeredUsers);
 login.registerUser('user4', 'pass4');
 login.login('user4', 'pass4');
 login.updatePassword('user3', 'pass3', 'pass5');
-login.login('user3', 'pass5');
+/*login.login('user3', 'pass5');
 login.logout('user4');
-login.logout('user3');
+login.logout('user3');*/
